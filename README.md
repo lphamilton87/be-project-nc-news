@@ -50,8 +50,10 @@ You can tidy up your local branches once they have been pull into main by deleti
 git branch -D <local branch>
 ```
 
-## Husky
+## Database setup
 
-To ensure we are not commiting broken code this project makes use of git hooks. Git hooks are scripts triggered during certain events in the git lifecycle. Husky is a popular package which allows us to set up and maintain these scripts. This project makes use a _pre-commit hook_. When we attempt to commit our work, the script defined in the `pre-commit` file will run. If any of our tests fail than the commit will be aborted.
+The following files will need to be added:
 
-The [Husky documentation](https://typicode.github.io/husky/#/) explains how to configure Husky for your own project as well as creating your own custom hooks.\_
+.env.development - add PGDATABASE=nc_games
+
+.env.test - add PGDATABASE=nc_games_test
