@@ -54,6 +54,7 @@ describe("GET/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then((response) => {
+        console.log(response.body);
         response.body.forEach((article) => {
           expect(article).toHaveProperty("author", expect.any(String));
           expect(article).toHaveProperty("title", expect.any(String));
