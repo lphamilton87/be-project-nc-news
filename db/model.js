@@ -21,3 +21,13 @@ exports.fetchArticles = () => {
       return article.rows;
     });
 };
+
+exports.fetchArticleId = (article_id) => {
+  const query = `SELECT * FROM articles
+  WHERE articles.article_id=$1`;
+  return db.query(query, [article_id]).then((article) => {
+    if (article.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Not found" });
+    } else return article.rows;
+  });
+};

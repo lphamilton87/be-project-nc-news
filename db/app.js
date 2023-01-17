@@ -1,5 +1,10 @@
 const express = require("express");
-const { checkApiResponse, getTopics, getArticles } = require("./controller");
+const {
+  checkApiResponse,
+  getTopics,
+  getArticles,
+  getArticleById,
+} = require("./controller");
 
 const app = express();
 
@@ -11,15 +16,17 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getArticles);
 
-app.use((err, req, res, next) => {
+app.get("/api/articles/:article_id", getArticleById);
+
+app.use((err, request, response, next) => {
   if (err.status) {
-    response.status(err.status).send({ msg: err.msg });
+    response.status(err.status).send({ msg: "Not found" });
   } else {
     next(err);
   }
 });
 
-app.use((err, req, res, next) => {
+app.use((err, request, response, next) => {
   if (err.code === "22P02") {
     response.status(400).send({ msg: "Bad request" });
   } else {
