@@ -1,5 +1,5 @@
 const express = require("express");
-const { checkApiResponse, getTopics } = require("./controller");
+const { checkApiResponse, getTopics, getArticles } = require("./controller");
 
 const app = express();
 
@@ -8,6 +8,8 @@ app.use(express.json());
 app.get("/api", checkApiResponse);
 
 app.get("/api/topics", getTopics);
+
+app.get("/api/articles", getArticles);
 
 app.use((err, req, res, next) => {
   if (err.status) {
@@ -21,13 +23,6 @@ app.use((err, req, res, next) => {
   if (err.code === "22P02") {
     response.status(400).send({ msg: "Bad request" });
   } else {
-    app.use((err, request, response, next) => {
-      console.log(err);
-      response.status(500).send({ msg: "Internal server error" });
-    });
-
-    module.exports = app;
-
     next(err);
   }
 });
