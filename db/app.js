@@ -4,6 +4,7 @@ const {
   getTopics,
   getArticles,
   getArticleById,
+  getArticleComments,
 } = require("./controller");
 
 const app = express();
@@ -18,9 +19,11 @@ app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
 
+app.get("/api/articles/:article_id/comments", getArticleComments);
+
 app.use((err, request, response, next) => {
   if (err.status) {
-    response.status(err.status).send({ msg: "Not found" });
+    response.status(err.status).send({ msg: err.msg });
   } else {
     next(err);
   }

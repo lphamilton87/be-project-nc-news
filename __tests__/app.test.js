@@ -73,15 +73,20 @@ describe("GET/api/articles/:id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then((response) => {
-        const result = response.body[0];
-        expect(result).toHaveProperty("author", expect.any(String));
-        expect(result).toHaveProperty("title", expect.any(String));
-        expect(result).toHaveProperty("article_id", expect.any(Number));
-        expect(result).toHaveProperty("body", expect.any(String));
-        expect(result).toHaveProperty("topic", expect.any(String));
-        expect(result).toHaveProperty("created_at", expect.any(String));
-        expect(result).toHaveProperty("votes", expect.any(Number));
-        expect(result).toHaveProperty("article_img_url", expect.any(String));
+        console.log(response.body.article);
+        response.body.article.forEach((eachArticle) => {
+          expect(eachArticle).toHaveProperty("author", expect.any(String));
+          expect(eachArticle).toHaveProperty("title", expect.any(String));
+          expect(eachArticle).toHaveProperty("article_id", expect.any(Number));
+          expect(eachArticle).toHaveProperty("body", expect.any(String));
+          expect(eachArticle).toHaveProperty("topic", expect.any(String));
+          expect(eachArticle).toHaveProperty("created_at", expect.any(String));
+          expect(eachArticle).toHaveProperty("votes", expect.any(Number));
+          expect(eachArticle).toHaveProperty(
+            "article_img_url",
+            expect.any(String)
+          );
+        });
       });
   });
   test("if passed an ID that doesnt exists - 404: Not found", () => {
@@ -92,7 +97,7 @@ describe("GET/api/articles/:id", () => {
         expect(err.body.msg).toBe("Not found");
       });
   });
-  test("if passed an ID that doesnt exists - 400: Bad request ", () => {
+  test("if passed a request in the wrong format - 400: Bad request ", () => {
     return request(app)
       .get("/api/articles/fakearticle")
       .expect(400)

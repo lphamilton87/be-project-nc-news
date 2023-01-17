@@ -20,7 +20,16 @@ exports.getArticleById = (request, response, next) => {
   const articleId = request.params.article_id;
   fetchArticleId(articleId)
     .then((article) => {
-      response.status(200).send(article);
+      response.status(200).send({ article: article });
+    })
+    .catch(next);
+};
+
+exports.getArticleComments = (request, response, next) => {
+  const articleId = request.params.article_id;
+  fetchArticleId(articleId)
+    .then((comments) => {
+      response.status(200).send(comments);
     })
     .catch(next);
 };
