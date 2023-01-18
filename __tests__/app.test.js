@@ -49,6 +49,15 @@ describe("GET/api/articles", () => {
         expect(response.body[11].created_at).toBe("2020-01-07T14:08:00.000Z");
       });
   });
+  test("extra test using jest sorted to check the order is descending by created_at", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        const result = response.body;
+        expect(result).toBeSorted({ descending: "true", key: "created_at" });
+      });
+  });
   test("returns array of objects - including required properties from articles & an added comment_count", () => {
     return request(app)
       .get("/api/articles")
@@ -67,7 +76,7 @@ describe("GET/api/articles", () => {
       });
   });
 });
-describe("GET/api/articles/:id", () => {
+describe("GET/api/articles/:article_id", () => {
   test("returns 200: a single article object", () => {
     return request(app)
       .get("/api/articles/1")
@@ -98,6 +107,50 @@ describe("GET/api/articles/:id", () => {
       .expect(400)
       .then((err) => {
         expect(err.body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("GET/api/articles/:article_id/comments", () => {
+  test("returns 200: an array of comments for the given article_id", () => {
+    return request(app)
+      .get("/api/articles/3/comments")
+      .expect(200)
+      .then((result) => {
+        console.log(result.body);
+        result.body.comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id", expect.any(Number));
+          expect(comment).toHaveProperty("votes", expect.any(Number));
+          expect(comment).toHaveProperty("created_at", expect.any(String));
+          expect(comment).toHaveProperty("author", expect.any(String));
+          expect(comment).toHaveProperty("body", expect.any(String));
+          expect(comment).toHaveProperty("article_id", expect.any(Number));
+        });
+      });
+  });
+  test("if a request is made in the wrong format - 404: Not found", () => {
+    return request(app)
+      .get("/api/articles/1000/comments")
+      .expect(404)
+      .then((err) => {
+        expect(err.body.msg).toBe("Not found");
+      });
+  });
+  test("if passed an ID that doesnt exists - 400: Bad request ", () => {
+    return request(app)
+      .get("/api/articles/fakearticle/comments")
+      .expect(400)
+      .then((err) => {
+        expect(err.body.msg).toBe("Bad request");
+      });
+  });
+  test("returns in order with the most recent comments first", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then((response) => {
+        const result = response.body.comments;
+        expect(result).toBeSorted({ descending: "true", key: "created_at" });
       });
   });
 });

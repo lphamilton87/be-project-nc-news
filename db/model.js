@@ -31,3 +31,14 @@ exports.fetchArticleId = (article_id) => {
     } else return article.rows;
   });
 };
+
+exports.fetchComments = (article_id) => {
+  const query = `SELECT * FROM comments
+  WHERE comments.article_id=$1
+  ORDER BY created_at DESC`;
+  return db.query(query, [article_id]).then((comments) => {
+    if (comments.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Not found" });
+    } else return comments.rows;
+  });
+};
