@@ -37,6 +37,7 @@ exports.fetchComments = (article_id) => {
   WHERE comments.article_id=$1
   ORDER BY created_at DESC`;
   return db.query(query, [article_id]).then((comments) => {
+    console.log(comments);
     if (comments.rows.length === 0) {
       return Promise.reject({ status: 404, msg: "Not found" });
     } else return comments.rows;
