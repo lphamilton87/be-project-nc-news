@@ -44,8 +44,8 @@ exports.postNewComments = (request, response, next) => {
   const { article_id } = request.params;
   const { username, body } = request.body;
   insertComments(article_id, { username, body })
-    .then((newComms) => {
-      response.status(201).send(newComms);
+    .then((newComm) => {
+      response.status(201).send(newComm);
     })
     .catch(next);
 };

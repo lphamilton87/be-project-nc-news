@@ -182,6 +182,8 @@ describe("POST/api/articles/:article_id/comments", () => {
         expect(result).toHaveProperty("author", expect.any(String));
         expect(result).toHaveProperty("body", expect.any(String));
         expect(result).toHaveProperty("article_id", expect.any(Number));
+        expect(result.body).toEqual("This is a test comment");
+        expect(result.author).toEqual("rogersop");
       });
   });
   test("if the article_id doesn't exist return - 404: Not found", () => {
