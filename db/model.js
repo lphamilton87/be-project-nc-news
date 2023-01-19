@@ -42,8 +42,15 @@ exports.fetchComments = (article_id) => {
 };
 
 exports.insertComments = (articleId, { username, body }) => {
-  const query = `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING*`;
-  return db.query(query, [articleId, username, body]).then((comment) => {
-    return comment.rows[0];
+  const queryId = `SELECT * FROM articles WHERE article_id=$1`;
+  return db.query(queryId, [articleId]).then((article) => {
+    if (article.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Not found" });
+    } else {
+      const query = `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING*`;
+      return db.query(query, [articleId, username, body]).then((comment) => {
+        return comment.rows[0];
+      });
+    }
   });
 };
