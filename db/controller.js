@@ -35,7 +35,6 @@ exports.getComments = (request, response, next) => {
   const articleId = request.params.article_id;
   Promise.all([fetchComments(articleId), fetchArticleId(articleId)])
     .then(([result]) => {
-      console.log(result);
       response.status(200).send({ comments: result });
     })
     .catch(next);
