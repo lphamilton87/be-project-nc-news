@@ -1,4 +1,10 @@
-const { fetchTopics, fetchArticles, fetchArticleId } = require("./model");
+const {
+  fetchTopics,
+  fetchArticles,
+  fetchArticleId,
+  fetchComments,
+  insertComments,
+} = require("./model");
 
 exports.checkApiResponse = (request, response) => {
   response.status(200).send({ message: "all okay!" });
@@ -30,6 +36,25 @@ exports.getArticleComments = (request, response, next) => {
   fetchArticleId(articleId)
     .then((comments) => {
       response.status(200).send(comments);
+    })
+    .catch(next);
+};
+
+exports.getComments = (request, response, next) => {
+  const articleId = request.params.article_id;
+  Promise.all([fetchComments(articleId), fetchArticleId(articleId)])
+    .then(([result]) => {
+      response.status(200).send({ comments: result });
+    })
+    .catch(next);
+};
+
+exports.postNewComments = (request, response, next) => {
+  const { article_id } = request.params;
+  const { username, body } = request.body;
+  insertComments(article_id, { username, body })
+    .then((newComm) => {
+      response.status(201).send(newComm);
     })
     .catch(next);
 };

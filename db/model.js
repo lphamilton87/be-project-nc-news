@@ -31,3 +31,19 @@ exports.fetchArticleId = (article_id) => {
     } else return article.rows;
   });
 };
+
+exports.fetchComments = (article_id) => {
+  const queryComments = `SELECT * FROM comments
+  WHERE comments.article_id=$1
+  ORDER BY created_at DESC`;
+  return db.query(queryComments, [article_id]).then((comments) => {
+    return comments.rows;
+  });
+};
+
+exports.insertComments = (articleId, { username, body }) => {
+  const query = `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING*`;
+  return db.query(query, [articleId, username, body]).then((comment) => {
+    return comment.rows[0];
+  });
+};
