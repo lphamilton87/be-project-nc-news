@@ -35,7 +35,6 @@ exports.getComments = (request, response, next) => {
   const articleId = request.params.article_id;
   Promise.all([fetchComments(articleId), fetchArticleId(articleId)])
     .then(([result]) => {
-      console.log(result);
       response.status(200).send({ comments: result });
     })
     .catch(next);
@@ -45,8 +44,8 @@ exports.postNewComments = (request, response, next) => {
   const { article_id } = request.params;
   const { username, body } = request.body;
   insertComments(article_id, { username, body })
-    .then((newComms) => {
-      response.status(201).send(newComms);
+    .then((newComm) => {
+      response.status(201).send(newComm);
     })
     .catch(next);
 };

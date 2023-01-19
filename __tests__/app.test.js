@@ -133,7 +133,7 @@ describe("GET/api/articles/:article_id/comments", () => {
       .get("/api/articles/2/comments")
       .expect(200)
       .then((response) => {
-        result = response.body.comments;
+        const result = response.body.comments;
         expect(result).toEqual([]);
       });
   });
@@ -176,7 +176,6 @@ describe("POST/api/articles/:article_id/comments", () => {
       .expect(201)
       .then((response) => {
         const result = response.body;
-        console.log(result);
         expect(result).toHaveProperty("comment_id", expect.any(Number));
         expect(result).toHaveProperty("votes", expect.any(Number));
         expect(result).toHaveProperty("created_at", expect.any(String));
