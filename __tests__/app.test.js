@@ -128,6 +128,15 @@ describe("GET/api/articles/:article_id/comments", () => {
         });
       });
   });
+  test("returns an empty array when there are no comments on the article", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((response) => {
+        result = response.body.comments;
+        expect(result).toEqual([]);
+      });
+  });
   test("if a request is made in the wrong format - 404: Not found", () => {
     return request(app)
       .get("/api/articles/1000/comments")
@@ -151,6 +160,55 @@ describe("GET/api/articles/:article_id/comments", () => {
       .then((response) => {
         const result = response.body.comments;
         expect(result).toBeSorted({ descending: "true", key: "created_at" });
+      });
+  });
+});
+
+describe("POST/api/articles/:article_id/comments", () => {
+  test("returns 201: new comment", () => {
+    const testComment = {
+      username: "rogersop",
+      body: "This is a test comment",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(testComment)
+      .expect(201)
+      .then((response) => {
+        const result = response.body;
+        console.log(result);
+        expect(result).toHaveProperty("comment_id", expect.any(Number));
+        expect(result).toHaveProperty("votes", expect.any(Number));
+        expect(result).toHaveProperty("created_at", expect.any(String));
+        expect(result).toHaveProperty("author", expect.any(String));
+        expect(result).toHaveProperty("body", expect.any(String));
+        expect(result).toHaveProperty("article_id", expect.any(Number));
+      });
+  });
+  // // test("if a request is made in the wrong format - 404: Not found", () => {
+  //   const testComment = {
+  //     username: "rogersop",
+  //     body: "This is a test comment",
+  //   };
+  // //   return request(app)
+  //     .post("/api/articles/1000/comments")
+  // .send(testComment)
+  //     .expect(404)
+  //     .then((err) => {
+  //       expect(err.body.msg).toBe("Not found");
+  //     });
+  // });
+  test("if passed an ID that doesnt exists - 400: Bad request ", () => {
+    const testComment = {
+      username: "rogersop",
+      body: "This is a test comment",
+    };
+    return request(app)
+      .post("/api/articles/fakearticle/comments")
+      .send(testComment)
+      .expect(400)
+      .then((err) => {
+        expect(err.body.msg).toBe("Bad request");
       });
   });
 });

@@ -3,6 +3,7 @@ const {
   fetchArticles,
   fetchArticleId,
   fetchComments,
+  insertComments,
 } = require("./model");
 
 exports.checkApiResponse = (request, response) => {
@@ -32,9 +33,20 @@ exports.getArticleById = (request, response, next) => {
 
 exports.getComments = (request, response, next) => {
   const articleId = request.params.article_id;
-  fetchComments(articleId)
-    .then((comments) => {
-      response.status(200).send({ comments: comments });
+  Promise.all([fetchComments(articleId), fetchArticleId(articleId)])
+    .then(([result]) => {
+      console.log(result);
+      response.status(200).send({ comments: result });
+    })
+    .catch(next);
+};
+
+exports.postNewComments = (request, response, next) => {
+  const { article_id } = request.params;
+  const { username, body } = request.body;
+  insertComments(article_id, { username, body })
+    .then((newComms) => {
+      response.status(201).send(newComms);
     })
     .catch(next);
 };

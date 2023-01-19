@@ -33,13 +33,17 @@ exports.fetchArticleId = (article_id) => {
 };
 
 exports.fetchComments = (article_id) => {
-  const query = `SELECT * FROM comments
+  const queryComments = `SELECT * FROM comments
   WHERE comments.article_id=$1
   ORDER BY created_at DESC`;
-  return db.query(query, [article_id]).then((comments) => {
-    console.log(comments);
-    if (comments.rows.length === 0) {
-      return Promise.reject({ status: 404, msg: "Not found" });
-    } else return comments.rows;
+  return db.query(queryComments, [article_id]).then((comments) => {
+    return comments.rows;
+  });
+};
+
+exports.insertComments = (articleId, { username, body }) => {
+  const query = `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING*`;
+  return db.query(query, [articleId, username, body]).then((comment) => {
+    return comment.rows[0];
   });
 };
