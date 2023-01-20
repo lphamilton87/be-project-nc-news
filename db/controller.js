@@ -6,7 +6,6 @@ const {
   insertComments,
   updateVotes,
   fetchUsers,
-
 } = require("./model");
 
 exports.checkApiResponse = (request, response) => {
@@ -20,9 +19,12 @@ exports.getTopics = (request, response) => {
 };
 
 exports.getArticles = (request, response, next) => {
-  fetchArticles().then((articles) => {
-    response.status(200).send(articles);
-  });
+  const { topic, sort_by, order } = request.query;
+  fetchArticles(topic, sort_by, order)
+    .then((articles) => {
+      response.status(200).send(articles);
+    })
+    .catch(next);
 };
 
 exports.getArticleById = (request, response, next) => {
@@ -76,4 +78,4 @@ exports.getUsers = (request, response) => {
   fetchUsers().then((users) => {
     response.status(200).send(users);
   });
-
+};

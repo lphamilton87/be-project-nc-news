@@ -6,20 +6,28 @@ exports.fetchTopics = () => {
   });
 };
 
-exports.fetchArticles = () => {
-  return db
-    .query(
-      `SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url,
+exports.fetchArticles = (topic, sort_by = "created_at", order = "desc") => {
+  // console.log(topic);
+  let queryValues = [];
+  let queryStr = `SELECT articles.author, title, articles.article_id, articles.topic, articles.created_at, articles.votes, article_img_url,
     COUNT(comments.article_id) 
     AS comment_count
     FROM articles
-    LEFT JOIN comments ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id
-    ORDER BY created_at DESC`
-    )
-    .then((article) => {
-      return article.rows;
-    });
+    LEFT JOIN comments ON comments.article_id = articles.article_id`;
+
+  if (topic !== undefined) {
+    queryStr += ` WHERE articles.topic = $1`;
+    queryValues.push(topic);
+  }
+
+  queryStr += ` GROUP BY articles.article_id
+ORDER BY ${sort_by} ${order}`;
+
+  return db.query(queryStr, queryValues).then((article) => {
+    if (article.rows.length === 0) {
+      return Promise.reject({ status: 400, msg: "Not found" });
+    } else return article.rows;
+  });
 };
 
 exports.fetchArticleId = (article_id) => {
@@ -67,3 +75,5 @@ exports.updateVotes = (article_id, vote) => {
 exports.fetchUsers = () => {
   return db.query("SELECT * FROM users").then((users) => {
     return users.rows;
+  });
+};

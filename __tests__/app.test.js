@@ -75,6 +75,26 @@ describe("GET/api/articles", () => {
         });
       });
   });
+  test("can successfully query the topic", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.length).toBe(1);
+        response.body.forEach((article) => {
+          expect(article).toHaveProperty("topic", expect.any(String));
+          expect(article).toHaveProperty("topic", expect.toBeString("cats"));
+        });
+      });
+  });
+  test("can successfully query the votes in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&order=desc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toBeSortedBy("votes", { descending: true });
+      });
+  });
 });
 describe("GET/api/articles/:article_id", () => {
   test("returns 200: a single article object", () => {
@@ -281,3 +301,6 @@ describe("GET/api/users", () => {
           expect(topic).toHaveProperty("name", expect.any(String));
           expect(topic).toHaveProperty("avatar_url", expect.any(String));
         });
+      });
+  });
+});
