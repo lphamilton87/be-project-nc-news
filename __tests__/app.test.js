@@ -223,7 +223,8 @@ describe("PATCH/api/articles/:articleId", () => {
       .patch("/api/articles/1")
       .send(votesObject)
       .then((updatedArticle) => {
-        expect(updatedArticle.body.votes).toBe(110);
+        const result = updatedArticle.body.updatedArticle.votes;
+        expect(result).toBe(110);
       });
   });
   test("can decrease the votes on an article", () => {
@@ -232,7 +233,8 @@ describe("PATCH/api/articles/:articleId", () => {
       .patch("/api/articles/1")
       .send(votesObject)
       .then((updatedArticle) => {
-        expect(updatedArticle.body.votes).toBe(90);
+        const result = updatedArticle.body.updatedArticle.votes;
+        expect(result).toBe(90);
       });
   });
   test("if a request is made with an article_id that does not exist return - 404: Not found", () => {
@@ -247,6 +249,16 @@ describe("PATCH/api/articles/:articleId", () => {
   });
   test("if passed a request in the wrong format return - 400: Bad request ", () => {
     const votesObject = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/articles/fakearticle")
+      .expect(400)
+      .send(votesObject)
+      .then((err) => {
+        expect(err.body.msg).toBe("Bad request");
+      });
+  });
+  test("if passed a request with the wrong key - 400: Bad request ", () => {
+    const votesObject = { wrongKey: 10 };
     return request(app)
       .patch("/api/articles/fakearticle")
       .expect(400)
