@@ -7,8 +7,26 @@ exports.fetchTopics = () => {
 };
 
 exports.fetchArticles = (topic, sort_by = "created_at", order = "desc") => {
-  // console.log(topic);
+  const acceptedSortBy = [
+    "created_at",
+    "comment_count",
+    "votes",
+    "author",
+    "title",
+    "article_img_url",
+  ];
+
+  const acceptedOrder = ["asc", "desc"];
+
   let queryValues = [];
+
+  if (!acceptedSortBy.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "Not found" });
+  }
+  if (!acceptedOrder.includes(order)) {
+    return Promise.reject({ status: 400, msg: "Not found" });
+  }
+
   let queryStr = `SELECT articles.author, title, articles.article_id, articles.topic, articles.created_at, articles.votes, article_img_url,
     COUNT(comments.article_id) 
     AS comment_count

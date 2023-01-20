@@ -87,6 +87,22 @@ describe("GET/api/articles", () => {
         });
       });
   });
+  test("if a request is made for a topic that doesn't exist - 400: Not found", () => {
+    return request(app)
+      .get("/api/articles?topic=faketopic")
+      .expect(400)
+      .then((err) => {
+        expect(err.body.msg).toBe("Not found");
+      });
+  });
+  test("if passed an invalid sort_by - 400: Not found ", () => {
+    return request(app)
+      .get("/api/articles?sort_by=northcoders")
+      .expect(400)
+      .then((err) => {
+        expect(err.body.msg).toBe("Not found");
+      });
+  });
   test("can successfully query the votes in descending order", () => {
     return request(app)
       .get("/api/articles?sort_by=votes&order=desc")
@@ -96,6 +112,7 @@ describe("GET/api/articles", () => {
       });
   });
 });
+
 describe("GET/api/articles/:article_id", () => {
   test("returns 200: a single article object", () => {
     return request(app)
