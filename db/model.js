@@ -63,3 +63,7 @@ exports.updateVotes = (article_id, vote) => {
     } else return updatedArticle.rows[0];
   });
 };
+
+exports.fetchUsers = () => {
+  return db.query("SELECT * FROM users").then((users) => {
+    return users.rows;
