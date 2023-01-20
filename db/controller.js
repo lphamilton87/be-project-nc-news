@@ -5,7 +5,6 @@ const {
   fetchComments,
   insertComments,
   updateVotes,
-  fetchUsers,
 } = require("./model");
 
 exports.checkApiResponse = (request, response) => {
@@ -69,10 +68,4 @@ exports.patchVotes = (request, response, next) => {
       response.status(201).send(updateVotes);
     })
     .catch(next);
-};
-
-exports.getUsers = (request, response) => {
-  fetchUsers().then((users) => {
-    response.status(200).send(users);
-  });
 };
