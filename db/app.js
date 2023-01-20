@@ -6,6 +6,7 @@ const {
   getArticleById,
   getComments,
   postNewComments,
+  patchVotes,
   getUsers,
 } = require("./controller");
 
@@ -24,6 +25,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getComments);
 
 app.post("/api/articles/:article_id/comments", postNewComments);
+
+app.patch("/api/articles/:article_id", patchVotes);
 
 app.get("/api/users", getUsers);
 
@@ -44,7 +47,6 @@ app.use((err, request, response, next) => {
 });
 
 app.use((err, request, response, next) => {
-  console.log(err);
   response.status(500).send({ msg: "Internal server error" });
 });
 
