@@ -4,6 +4,8 @@ const {
   fetchArticleId,
   fetchComments,
   insertComments,
+  updateVotes,
+  fetchUsers,
 } = require("./model");
 
 exports.checkApiResponse = (request, response) => {
@@ -57,4 +59,20 @@ exports.postNewComments = (request, response, next) => {
       response.status(201).send(newComm);
     })
     .catch(next);
+};
+
+exports.patchVotes = (request, response, next) => {
+  const { article_id } = request.params;
+  const { inc_votes } = request.body;
+  updateVotes(article_id, inc_votes)
+    .then((updateVotes) => {
+      response.status(201).send(updateVotes);
+    })
+    .catch(next);
+};
+
+exports.getUsers = (request, response) => {
+  fetchUsers().then((users) => {
+    response.status(200).send(users);
+  });
 };

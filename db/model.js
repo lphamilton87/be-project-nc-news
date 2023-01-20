@@ -54,3 +54,18 @@ exports.insertComments = (articleId, { username, body }) => {
     }
   });
 };
+
+exports.updateVotes = (article_id, vote) => {
+  const query = `UPDATE articles SET votes = votes + $2 WHERE article_id=$1 RETURNING *`;
+  return db.query(query, [article_id, vote]).then((updatedArticle) => {
+    if (updatedArticle.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Not found" });
+    } else return updatedArticle.rows[0];
+  });
+};
+
+exports.fetchUsers = () => {
+  return db.query("SELECT * FROM users").then((users) => {
+    return users.rows;
+  });
+};
