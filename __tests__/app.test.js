@@ -82,7 +82,6 @@ describe("GET/api/articles/:article_id", () => {
       .get("/api/articles/1")
       .expect(200)
       .then((response) => {
-        console.log(response.body.article);
         response.body.article.forEach((eachArticle) => {
           expect(eachArticle).toHaveProperty("author", expect.any(String));
           expect(eachArticle).toHaveProperty("title", expect.any(String));
@@ -211,6 +210,59 @@ describe("POST/api/articles/:article_id/comments", () => {
       .post("/api/articles/fakearticle/comments")
       .send(testComment)
       .expect(400)
+      .then((err) => {
+        expect(err.body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("PATCH/api/articles/:articleId", () => {
+  test("can increase the votes on an article", () => {
+    const votesObject = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(votesObject)
+      .then((updatedArticle) => {
+        const result = updatedArticle.body.updatedArticle.votes;
+        expect(result).toBe(110);
+      });
+  });
+  test("can decrease the votes on an article", () => {
+    const votesObject = { inc_votes: -10 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(votesObject)
+      .then((updatedArticle) => {
+        const result = updatedArticle.body.updatedArticle.votes;
+        expect(result).toBe(90);
+      });
+  });
+  test("if a request is made with an article_id that does not exist return - 404: Not found", () => {
+    const votesObject = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/articles/1000")
+      .expect(404)
+      .send(votesObject)
+      .then((err) => {
+        expect(err.body.msg).toBe("Not found");
+      });
+  });
+  test("if passed a request in the wrong format return - 400: Bad request ", () => {
+    const votesObject = { inc_votes: 10 };
+    return request(app)
+      .patch("/api/articles/fakearticle")
+      .expect(400)
+      .send(votesObject)
+      .then((err) => {
+        expect(err.body.msg).toBe("Bad request");
+      });
+  });
+  test("if passed a request with the wrong key - 400: Bad request ", () => {
+    const votesObject = { wrongKey: 10 };
+    return request(app)
+      .patch("/api/articles/fakearticle")
+      .expect(400)
+      .send(votesObject)
       .then((err) => {
         expect(err.body.msg).toBe("Bad request");
       });
