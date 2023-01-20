@@ -54,3 +54,9 @@ exports.insertComments = (articleId, { username, body }) => {
     }
   });
 };
+
+exports.fetchUsers = () => {
+  return db.query("SELECT * FROM users").then((users) => {
+    return users.rows;
+  });
+};

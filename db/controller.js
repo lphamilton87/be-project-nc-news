@@ -4,6 +4,7 @@ const {
   fetchArticleId,
   fetchComments,
   insertComments,
+  fetchUsers,
 } = require("./model");
 
 exports.checkApiResponse = (request, response) => {
@@ -57,4 +58,10 @@ exports.postNewComments = (request, response, next) => {
       response.status(201).send(newComm);
     })
     .catch(next);
+};
+
+exports.getUsers = (request, response) => {
+  fetchUsers().then((users) => {
+    response.status(200).send(users);
+  });
 };

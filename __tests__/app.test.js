@@ -216,3 +216,19 @@ describe("POST/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("GET/api/users", () => {
+  test("returns 200: array of user objects and check the correct amount of users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.length).toBe(4);
+        response.body.forEach((topic) => {
+          expect(topic).toHaveProperty("username", expect.any(String));
+          expect(topic).toHaveProperty("name", expect.any(String));
+          expect(topic).toHaveProperty("avatar_url", expect.any(String));
+        });
+      });
+  });
+});
