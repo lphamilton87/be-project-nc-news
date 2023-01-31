@@ -131,6 +131,10 @@ describe("GET/api/articles/:article_id", () => {
             "article_img_url",
             expect.any(String)
           );
+          expect(eachArticle).toHaveProperty(
+            "comment_count",
+            expect.any(String)
+          );
         });
       });
   });
