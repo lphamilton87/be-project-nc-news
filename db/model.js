@@ -49,8 +49,11 @@ ORDER BY ${sort_by} ${order}`;
 };
 
 exports.fetchArticleId = (article_id) => {
-  const query = `SELECT * FROM articles
-  WHERE articles.article_id=$1`;
+  const query = `SELECT articles.*,
+  COUNT(comments.article_id) AS comment_count FROM articles
+  LEFT JOIN comments ON comments.article_id = articles.article_id
+  WHERE articles.article_id=$1
+  GROUP BY articles.article_id`;
   return db.query(query, [article_id]).then((article) => {
     if (article.rows.length === 0) {
       return Promise.reject({ status: 404, msg: "Not found" });
@@ -59,11 +62,18 @@ exports.fetchArticleId = (article_id) => {
 };
 
 exports.fetchComments = (article_id) => {
-  const queryComments = `SELECT * FROM comments
+  const queryId = `SELECT * FROM articles WHERE article_id=$1`;
+  return db.query(queryId, [article_id]).then((article) => {
+    if (article.rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Not found" });
+    } else {
+      const queryComments = `SELECT * FROM comments
   WHERE comments.article_id=$1
   ORDER BY created_at DESC`;
-  return db.query(queryComments, [article_id]).then((comments) => {
-    return comments.rows;
+      return db.query(queryComments, [article_id]).then((comments) => {
+        return comments.rows;
+      });
+    }
   });
 };
 
