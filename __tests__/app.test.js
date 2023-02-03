@@ -325,3 +325,20 @@ describe("GET/api/users", () => {
       });
   });
 });
+
+describe("DELETE/api/comments/:comment_id", () => {
+  test("returns 204: with the comment deleted", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then((deletedComment) => {
+        expect(deletedComment.body).toEqual({});
+      });
+  });
+  test("return 404: Not found when the comment_id doesn't exists", () => {
+    return request(app).delete("/api/comments/1000").expect(404);
+  });
+  test("return 400: Bad request when comment_id provided is invalid", () => {
+    return request(app).delete("/api/comments/fakeRequest").expect(400);
+  });
+});

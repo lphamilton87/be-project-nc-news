@@ -6,6 +6,7 @@ const {
   insertComments,
   updateVotes,
   fetchUsers,
+  commentToDelete,
 } = require("./model");
 
 exports.checkApiResponse = (request, response) => {
@@ -49,8 +50,6 @@ exports.getComments = (request, response, next) => {
   const articleId = request.params.article_id;
   fetchComments(articleId)
     .then((comments) => {
-      // Promise.all([fetchComments(articleId), fetchArticleId(articleId)])
-      //   .then(([result]) => {
       response.status(200).send({ comments: comments });
     })
     .catch(next);
@@ -80,4 +79,15 @@ exports.getUsers = (request, response) => {
   fetchUsers().then((users) => {
     response.status(200).send(users);
   });
+};
+
+exports.deleteComment = (request, response, next) => {
+  const { comment_id } = request.params;
+  commentToDelete(comment_id)
+    .then(() => {
+      response.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
