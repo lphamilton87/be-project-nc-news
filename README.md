@@ -10,12 +10,12 @@ This is an API for a backend server and PSQL database, developed with Node.js an
 
 ## GET
 
-/api
-/api/topics
-/api/articles
-/api/articles/:article_id
-/api/articles/:article_id
-/api/users
+* /api
+* /api/topics
+* /api/articles
+* /api/articles/:article_id
+* /api/articles/:article_id
+* /api/users
 
 ## PATCH
 
