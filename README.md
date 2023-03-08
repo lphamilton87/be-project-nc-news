@@ -19,15 +19,15 @@ This is an API for a backend server and PSQL database, developed with Node.js an
 
 ## PATCH
 
-/api/articles/:article_id
+* /api/articles/:article_id
 
 ## POST
 
-/api/articles/:article_id/comments
+* /api/articles/:article_id/comments
 
 ## DELETE
 
-/api/comments/:comment_id
+* /api/comments/:comment_id
 
 ## Getting Started
 
