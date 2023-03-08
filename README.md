@@ -31,10 +31,10 @@ This is an API for a backend server and PSQL database, developed with Node.js an
 
 ## Getting Started
 
-* To use this repository on your local machine you can for the repository run the command git clone add_url_here
-* You can then install the required dependencies by running npm install in your terminal
-* Run the commands npm setup-dbs and npm run seed to create and seed the databases
-* Run the tests by running the command npm test
+* To use this repository on your local machine you can for the repository run the command `git clone add_url_here`
+* You can then install the required dependencies by running `npm install` in your terminal
+* Run the commands `npm setup-dbs` and `npm run seed` to create and seed the databases
+* Run the tests by running the command `npm test`
 * Create the following files:
 * .env.development - add PGDATABASE=nc_games
 * .env.test - add PGDATABASE=nc_games_test
