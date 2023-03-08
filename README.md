@@ -1,6 +1,6 @@
 ## NC-News
 
-Welcome to NC-News. This is the back end project for a news article app. Allowing you to browse through various articles and vote and comment on them
+Welcome to NC-News. This is the back end project for a news article app. Allowing you to browse through various articles, vote and comment on them
 
 ## Description
 
